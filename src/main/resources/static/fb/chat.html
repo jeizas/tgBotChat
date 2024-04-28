@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>Hello WebSocket</title>
+    <link href="/webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/fb/main.css" rel="stylesheet">
+    <script src="/webjars/jquery/jquery.min.js"></script>
+    <script src="/webjars/sockjs-client/sockjs.min.js"></script>
+    <script src="/webjars/stomp-websocket/stomp.min.js"></script>
+    <script src="/fb/app.js"></script>
+
+    <style>
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="container-line">
+            <div class="input-group">
+                <label for="userId">用户ID</label>
+                <input type="text" id="userId" >
+            </div>
+
+            <div class="input-group" style="left: 20px">
+                <label for="email">邮箱</label>
+                <input type="text" id="email" >
+            </div>
+        </div>
+
+
+        <div class="container-line" style="align-items: flex-end">
+            <div class="input-group">
+                <label for="captchaCode">验证码</label>
+                <input type="text" id = "captchaCode">
+            </div>
+            <div class="input-group" style="left: 20px; margin-bottom: 20px;" >
+                <img src="/api/captcha"  id="captchaImg" onclick="refreshCaptcha();" title="点击刷新" width="130px" height="48px" alt="验证码" />
+            </div>
+
+        </div>
+        <div class="container-line" style="align-items: flex-end">
+            <div class="button-group">
+                <label>联系客服：</label>
+                <button id="connect" class="btn btn-default" type="submit">开始</button>
+                <button id="disconnect" class="btn btn-default" type="submit" disabled="disabled">结束</button>
+            </div>
+        </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <input type="text" id="content" class="form-control" placeholder="请输入...">
+                </div>
+                <button id="send" class="btn btn-default" type="submit">发送</button>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <table id="conversation" class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>记录</th>
+                        </tr>
+                        </thead>
+                        <tbody id="notice">
+                        </tbody>
+                    </table>
+                </div>
+
+        </div>
+    </div>
+</body>
+</html>

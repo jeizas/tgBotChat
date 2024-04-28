@@ -1,0 +1,4 @@
+app:
+  id: tgBotChat
+
+env: local

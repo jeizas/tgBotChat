@@ -1,0 +1,39 @@
+body {
+    background-color: #f5f5f5;
+}
+
+/* Add your styles here */
+.container {
+    width: 80%;
+    margin: auto;
+    padding: 20px;
+}
+.input-group {
+    margin-bottom: 10px;
+}
+.input-group label {
+    display: block;
+    margin-bottom: 5px;
+}
+.input-group input {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+}
+.button-group {
+    text-align: right;
+    margin: 20px;
+    margin-left: 0;
+}
+button {
+    padding: 8px 20px;
+    margin-left: 20px;
+}
+.content-area {
+    border: 1px solid #000;
+    height: 150px;
+    margin-bottom: 10px;
+}
+.container-line {
+    display: flex; /* 设置为Flex容器 */
+}
