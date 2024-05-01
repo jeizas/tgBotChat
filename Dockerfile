@@ -14,5 +14,5 @@ ENV botToken="default_topken"
 ENV botName="default_name"
 ENV botChatId="123"
 ENV JAVA_OPTS="-server -Xmx512m -Xms512m"
-ENTRYPOINT ["sh", "-c", "java ${JAVA_OPTS} -jar /app.jar ${botToken} ${botName} ${botChatId}"]
+ENTRYPOINT ["sh", "-c", "java ${JAVA_OPTS} -jar /app.jar ${botToken} ${botName} ${botChatId} &"]
 
