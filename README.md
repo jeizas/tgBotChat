@@ -20,9 +20,10 @@ env=local
 ### docker启动
 - 构建
 ``` shell
-docker build -t demo:latest
+mvn clean install -Dmaven.test.skip=true
+docker build -t demo:latest .
 ```
 - 部署
 ``` shell
-docker run -p 8080:8080 --env botName=name1 --env botToken=token2 --env botChatId=chatId --name demo-dev demo:latest
+docker run -p 8080:8080 --env botName='botName=xxx' --env botToken='botToken=xxx' --env botChatId='botChatId=xxx' --name demo-dev demo:latest
 ```
