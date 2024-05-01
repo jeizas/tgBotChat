@@ -4,6 +4,7 @@ import com.jeizas.biz.dto.CheckDTO;
 import com.jeizas.biz.dto.Response;
 import com.jeizas.biz.service.ChatService;
 import com.jeizas.domain.User;
+import com.jeizas.infrastructure.annotation.RateLimitAspect;
 import com.wf.captcha.GifCaptcha;
 import com.wf.captcha.base.Captcha;
 import jakarta.annotation.Resource;
@@ -41,6 +42,7 @@ public class MessageController {
      * @param response the response
      * @throws Exception the exception
      */
+    @RateLimitAspect(limitNum = 1)
     @GetMapping("/captcha")
     public void captcha(HttpServletRequest request, HttpServletResponse response) throws Exception {
         // 设置请求头为输出图片类型
@@ -70,11 +72,15 @@ public class MessageController {
      * @param request the request
      * @return the response
      */
+    @RateLimitAspect(limitNum = 100)
     @PostMapping("/check")
     public Response<?> check(@RequestBody CheckDTO req, HttpServletRequest request) {
         if (StringUtils.isEmpty(req.getCaptchaCode()) || StringUtils.isEmpty(req.getEmail())
                 || StringUtils.isEmpty(req.getUserId())) {
             return Response.error("参数异常");
+        }
+        if (req.getUserId().length() > 128) {
+            return Response.error("用户id过长");
         }
         String regex = "\\w+@\\w+\\.[a-z]+(\\.[a-z]+)?";
         if (!Pattern.matches(regex, req.getEmail())) {
