@@ -41,7 +41,7 @@ public class MessageController {
      * @param response the response
      * @throws Exception the exception
      */
-    @RateLimitAspect(limitNum = 1)
+    @RateLimitAspect(limitNum = 100)
     @GetMapping("/captcha")
     public void captcha(HttpServletRequest request, HttpServletResponse response) throws Exception {
         // 设置请求头为输出图片类型
