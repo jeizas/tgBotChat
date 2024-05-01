@@ -1,16 +1,28 @@
 ## 启动
-### IDEA
-增加启动参数args：botToken=xxx botName=@xxx botChatId=xxx
-IDEA设置路径：Program arguments添加参数
+### IDEA本地启动
+1. 需要准备参数：增加启动参数args：botToken=xxx botName=@xxx botChatId=xxx 
+2. IDEA设置路径：Program arguments添加参数
+3. 参数说明
 - botToken=xxx 机器人token
 - botName=@xxx 机器人名称
 - botChatId=xxx tg群聊chatId
-> com.jeizas.infrastructure.config.BotAutoConfiguration TG连接网络代理，按自己环境配置，后期可配置化
+4. 如果本地网络需要设置http代理才能连接TG，则需要如下代码，并设置启动
 
-### docker
+``` java
+// 类：com.jeizas.infrastructure.config.BotAutoConfiguration
+botOptions.setProxyHost("127.0.0.1");
+botOptions.setProxyPort(8888);
 
-docker build -t demo:latest . && docker run -p 9090:8080 --env botName=name1 --env botToken=token2 --env botChatId=chatId --name demo-dev demo:latest
+// 修改application.yml
+env=local
+```
 
-## TODO 待续
-
-
+### docker启动
+- 构建
+``` shell
+docker build -t demo:latest
+```
+- 部署
+``` shell
+docker run -p 8080:8080 --env botName=name1 --env botToken=token2 --env botChatId=chatId --name demo-dev demo:latest
+```
