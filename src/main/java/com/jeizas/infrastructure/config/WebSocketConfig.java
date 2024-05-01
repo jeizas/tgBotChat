@@ -3,9 +3,7 @@ package com.jeizas.infrastructure.config;
 import com.jeizas.biz.service.ChatService;
 import com.jeizas.infrastructure.intecepter.HttpHandShakeInterceptor;
 import com.jeizas.infrastructure.intecepter.SocketChannelInterceptor;
-import com.jeizas.infrastructure.listener.WebSocketEventListener;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
@@ -66,16 +64,6 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
                 .setSendBufferSizeLimit(512 * 1024)
                 .setMessageSizeLimit(16 * 1024)
                 .setTimeToFirstMessage(60);
-    }
-
-    /**
-     * Web socket event listener web socket event listener.
-     *
-     * @return the web socket event listener
-     */
-    @Bean
-    public WebSocketEventListener webSocketEventListener() {
-        return new WebSocketEventListener();
     }
 
 

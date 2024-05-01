@@ -49,9 +49,9 @@ public class RateLimitConfig {
             rateLimiter = RATE_LIMITER.get(functionName);
         }
         if (rateLimiter.tryAcquire()) {
-            log.info("处理完成");
             return point.proceed();
         } else {
+            log.info("接口已限流, method={}", currentMethod.getName());
             return Response.error("服务器繁忙，请稍后再试。");
         }
     }

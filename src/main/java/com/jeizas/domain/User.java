@@ -24,8 +24,18 @@ public class User {
     private String uuid;
 
     /**
-     * 客服点击是否开始 true已点击开始
+     * connect time
      */
-    private Boolean isStart;
+    private Long connectTime;
+
+    /**
+     * 聊天开始时间
+     */
+    private Long chartStartTime;
+
+    /**
+     * 聊天更新时间
+     */
+    private Long chatUpdateTime;
 
 }

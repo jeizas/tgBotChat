@@ -1,8 +1,8 @@
 package com.jeizas.infrastructure.intecepter;
 
+import com.alibaba.fastjson.JSON;
 import com.jeizas.biz.service.ChatService;
 import com.jeizas.biz.service.TgService;
-import com.jeizas.common.constant.StringConstant;
 import com.jeizas.common.context.SpringContext;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.Message;
@@ -34,6 +34,7 @@ public class SocketChannelInterceptor implements ChannelInterceptor {
                 connect(sessionId, message);
                 break;
             case DISCONNECT:
+                log.info("disconnect, message={}", JSON.toJSONString(message));
                 disconnect(sessionId);
                 break;
             case SUBSCRIBE:
@@ -47,14 +48,23 @@ public class SocketChannelInterceptor implements ChannelInterceptor {
     }
 
 
+    /**
+     * Connect.
+     *
+     * @param sessionId the session id
+     * @param message   the message
+     */
     private void connect(String sessionId, Message<?> message) {
         TgService tgService = (TgService) SpringContext.getBean("TgService");
         tgService.sendTextHello();
     }
 
+    /**
+     * Disconnect.
+     *
+     * @param sessionId the session id
+     */
     private void disconnect(String sessionId) {
-        TgService tgService = (TgService) SpringContext.getBean("TgService");
-        tgService.sendText(System.getProperty(StringConstant.PRO_KEY_CHAT), "用户已断开", true);
         ChatService chatService = (ChatService) SpringContext.getBean("ChatService");
         chatService.delUser();
     }

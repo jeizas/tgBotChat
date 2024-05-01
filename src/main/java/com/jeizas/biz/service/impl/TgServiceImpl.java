@@ -8,7 +8,6 @@ import com.jeizas.domain.User;
 import com.jeizas.infrastructure.listener.TgLongPollingBot;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
@@ -45,7 +44,7 @@ public class TgServiceImpl implements TgService {
             StringBuilder str = new StringBuilder();
             str.append("用户名：*").append(user.getUserName()).append("*").append("\n")
                     .append("邮箱：*").append(user.getEmail()).append("*").append("\n")
-                    .append("反馈：`").append(text).append("`");
+                    .append("用户反馈：`").append(text).append("`");
             content = str.toString();
         }
         SendMessage req = SendMessage.builder()
@@ -55,7 +54,10 @@ public class TgServiceImpl implements TgService {
                 .build();
         try {
             Object obj = tgLongPollingBot.execute(req);
-            log.info("sendText, msg={}, resp={}", JSON.toJSONString(req), JSON.toJSONString(obj));
+            log.info("sendText to TG, msg={}, resp={}", JSON.toJSONString(req), JSON.toJSONString(obj));
+            if (!isSystem) {
+                chatService.updateUser(ChatServiceImpl.TYPE_UPDATE_CHAT_STAMP);
+            }
         } catch (TelegramApiException e) {
             throw new RuntimeException(e);
         }
@@ -66,7 +68,7 @@ public class TgServiceImpl implements TgService {
         StringBuilder str = new StringBuilder();
         str.append("用户名：*").append(user.getUserName()).append("*").append("\n")
                 .append("邮箱：*").append(user.getEmail()).append("*").append("\n")
-                .append("进入聊天");
+                .append("用户已连接").append("_").append("(是否开启会话?)").append("_");
 
         InlineKeyboardButton button1 = InlineKeyboardButton.builder().text("开始").callbackData("kfStart").build();
         InlineKeyboardButton button2 = InlineKeyboardButton.builder().text("拒绝").callbackData("kfCancel").build();

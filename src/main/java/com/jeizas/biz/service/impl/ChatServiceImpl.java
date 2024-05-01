@@ -3,6 +3,7 @@ package com.jeizas.biz.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.jeizas.biz.dto.ChatDTO;
 import com.jeizas.biz.service.ChatService;
+import com.jeizas.biz.service.TgService;
 import com.jeizas.common.constant.StringConstant;
 import com.jeizas.domain.User;
 import jakarta.annotation.Resource;
@@ -18,11 +19,26 @@ import org.springframework.stereotype.Service;
 @Service(value = "ChatService")
 public class ChatServiceImpl implements ChatService {
 
+    /**
+     * The constant TYPE_UPDATE_START.
+     */
+    public static final String TYPE_UPDATE_START = "startTime";
+    /**
+     * The constant TYPE_UPDATE_CHAT_STAMP.
+     */
+    public static final String TYPE_UPDATE_CHAT_STAMP = "updateTime";
+
+    public static final String TYPE_UPDATE_CONNECT = "connectTime";
+
+
     @Resource
     private SimpMessagingTemplate template;
+    @Resource
+    private TgService tgService;
 
     private User user;
 
+    @Override
     public void pushMessage(String chatId, String text) {
         if (user == null) {
             return;
@@ -38,9 +54,11 @@ public class ChatServiceImpl implements ChatService {
             chatDTO.setTime(System.currentTimeMillis());
             chatDTO.setUserName("客服");
             template.convertAndSend("/chat/single/" + user.getUuid(), chatDTO);
+            updateUser(TYPE_UPDATE_CHAT_STAMP);
         }
     }
 
+    @Override
     public void disconnectMessage(String text) {
         if (user == null) {
             return;
@@ -49,8 +67,8 @@ public class ChatServiceImpl implements ChatService {
         chatDTO.setContent(text);
         chatDTO.setTime(System.currentTimeMillis());
         chatDTO.setUserName("客服");
-        template.convertAndSend("/chat/disconnect/" + user.getUuid(), chatDTO);
-        user = null;
+        chatDTO.setDisconnect(true);
+        template.convertAndSend("/chat/single/" + user.getUuid(), chatDTO);
     }
 
     @Override
@@ -63,9 +81,17 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public void updateUser(Boolean isStart) {
+    public void updateUser(String type) {
         if (user != null) {
-            user.setIsStart(isStart);
+            if (TYPE_UPDATE_START.equals(type)) {
+                user.setChartStartTime(System.currentTimeMillis());
+            }
+            if (TYPE_UPDATE_CHAT_STAMP.equals(type)) {
+                user.setChatUpdateTime(System.currentTimeMillis());
+            }
+            if (TYPE_UPDATE_CONNECT.equals(type)) {
+                user.setConnectTime(System.currentTimeMillis());
+            }
         }
     }
 
@@ -75,8 +101,11 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public void delUser() {
+    public synchronized void delUser() {
         log.info("监听连接断开，清空用户，user={}", JSON.toJSONString(user));
+        if (user != null) {
+            tgService.sendText(System.getProperty(StringConstant.PRO_KEY_CHAT), "_用户：" + user.getUserName() + "_，会话已结束", true);
+        }
         user = null;
     }
 }

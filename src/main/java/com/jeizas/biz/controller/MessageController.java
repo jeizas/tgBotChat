@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.awt.*;
 import java.util.UUID;
-import java.util.regex.Pattern;
 
 /**
  * 消息处理
@@ -82,19 +81,23 @@ public class MessageController {
         if (req.getUserId().length() > 128) {
             return Response.error("用户id过长");
         }
-        String regex = "\\w+@\\w+\\.[a-z]+(\\.[a-z]+)?";
-        if (!Pattern.matches(regex, req.getEmail())) {
+        if (!req.getEmail().contains("@") || req.getEmail().length() > 64) {
             return Response.error("邮箱格式异常");
+        }
+        if (req.getCaptchaCode().length() > 10) {
+            return Response.error("验证码太长");
         }
         String sessionCode = (String) request.getSession().getAttribute("captcha");
         if (!req.getCaptchaCode().equals(sessionCode)) {
             return Response.error("验证码错误");
         }
+        request.getSession().removeAttribute("captcha");
         String uuid = UUID.randomUUID().toString().replace("-", "").toLowerCase();
         User user = new User();
         user.setUserName(req.getUserId());
         user.setEmail(req.getEmail());
         user.setUuid(uuid);
+        user.setConnectTime(System.currentTimeMillis());
         if (chatService.addUser(user)) {
             return Response.success(user);
         }

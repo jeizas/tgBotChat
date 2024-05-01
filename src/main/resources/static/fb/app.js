@@ -71,12 +71,14 @@ function wsConnect(uuid) {
         //通过+from就可以指定我订阅的是我自己用户的信息
         stompClient.subscribe('/chat/single/' + uuid, function (result) {
             var data = JSON.parse(result.body)
-            showContent({'content': '<' + data.userName + '>: ' + data.content, 'time': new Date(data.time)});
-        });
-        stompClient.subscribe('/chat/disconnect/' + uuid, function (result) {
-            var data = JSON.parse(result.body)
-            showContent({'content': '<' + data.userName + '>: ' + data.content, 'time': new Date(data.time)});
-            disconnect()
+            if (data.disconnect === true) {
+                showContent({'content': '<' + data.userName + '>: ' + data.content, 'time': new Date(data.time)});
+                disconnect()
+            } else {
+                showContent({'content': '<' + data.userName + '>: ' + data.content, 'time': new Date(data.time)});
+
+            }
+
         });
     });
 }
@@ -96,7 +98,7 @@ function sendName() {
         {},
         JSON.stringify({'content': $("#content").val(), 'from': $("#userId").val()})
     );
-    var userId = $("#userId").val()
+    var userId = $("#userId").val();
     showContent({'content': '<' + userId + '>: ' + $("#content").val(), 'time': new Date().getTime()});
 }
 

@@ -37,8 +37,8 @@ public class ChatController {
         if (user == null) {
             return;
         }
-        // 处理消息
-        if (Boolean.TRUE.equals(user.getIsStart())) {
+        // 客服点击开始，则聊天，如果客服没响应，则等待
+        if (user.getChartStartTime() != null) {
             tgService.sendText(System.getProperty(StringConstant.PRO_KEY_CHAT), chatDTO.getContent(), false);
         } else {
             chatService.pushMessage(System.getProperty(StringConstant.PRO_KEY_CHAT), "等待客服中，请稍后...");

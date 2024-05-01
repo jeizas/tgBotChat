@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.jeizas.biz.service.ChatService;
 import com.jeizas.biz.service.TgService;
+import com.jeizas.biz.service.impl.ChatServiceImpl;
 import com.jeizas.common.constant.StringConstant;
 import com.jeizas.common.context.SpringContext;
 import lombok.Data;
@@ -69,6 +70,11 @@ public class TgMessageUpdate {
      */
     public static void receiveMsg(Update update) {
         ChatService chatService = (ChatService) SpringContext.getBean("ChatService");
+        com.jeizas.domain.User curUser = chatService.getUser();
+        if (curUser == null) {
+            log.warn("用户已断开连接，不监听聊天以及回复");
+            return;
+        }
         TgService tgService = (TgService) SpringContext.getBean("TgService");
         CallbackQuery callbackQuery = update.getCallbackQuery();
         // 按钮回复
@@ -79,8 +85,8 @@ public class TgMessageUpdate {
             switch (command) {
                 case "kfStart":
                     chatService.pushMessage(chatId, "客服已接入，聊天开始");
-                    chatService.updateUser(true);
-                    tgService.sendText(chatId, "开始聊天，回复用户，请@机器人", true);
+                    chatService.updateUser(ChatServiceImpl.TYPE_UPDATE_START);
+                    tgService.sendText(chatId, "已开启和_用户：" + curUser.getUserName() +"_，聊天会话，回复用户，请@机器人", true);
                     break;
                 case "kfCancel":
                     chatService.disconnectMessage("客服忙，请稍后重新连接...");

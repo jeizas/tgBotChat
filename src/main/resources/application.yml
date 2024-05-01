@@ -1,4 +1,8 @@
 app:
   id: tgBotChat
 
-env: local
+env: prd
+
+spring:
+  main:
+    allow-circular-references: true

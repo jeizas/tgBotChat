@@ -33,9 +33,9 @@ public interface ChatService {
     /**
      * Update user boolean.
      *
-     * @param isStart the is start
+     * @param type the is start
      */
-    void updateUser(Boolean isStart);
+    void updateUser(String type);
 
     /**
      * Gets user.
@@ -48,4 +48,5 @@ public interface ChatService {
      * Del user.
      */
     void delUser();
+
 }
