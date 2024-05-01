@@ -28,7 +28,7 @@ function connect() {
         return;
     }
 
-    fetch('http://localhost:8080/api/check', {
+    fetch('/api/check', {
         method: 'POST',
         headers: {
             "Content-Type": "application/json"
